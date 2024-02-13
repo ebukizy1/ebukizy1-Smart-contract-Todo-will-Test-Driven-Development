@@ -37,7 +37,6 @@ contract TodoList {
     }
 
     function deleteTodo(uint8 _index) external validateIndexed(_index) {
-        require(_index <= todoList.length, "Invalid input");
         todoList[_index] = todoList[todoList.length - 1];
         todoList.pop();
     }
