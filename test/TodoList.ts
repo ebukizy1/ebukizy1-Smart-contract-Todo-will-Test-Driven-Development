@@ -61,10 +61,46 @@ describe.only("TodoList", async ()=>{
         expect(await todoList.checkTodoLength()).to.equal(2);
         await todoList.deleteTodo(0);
         expect(await todoList.checkTodoLength()).to.equal(1);
+    });
 
 
-    })
+    it("test that wrong input will revert ", async ()=>{
+        const {todoList,todoTitle, todoDescription, dueDate} = await loadFixture(deployTodoList);
+        const { todoTitle: todoTitle2, todoDescription: todoDescription2, dueDate: dueDate2 } = await loadFixture(deployTodoList);
+        await todoList.createTodos(todoTitle, todoDescription, dueDate);
+        await todoList.createTodos(todoTitle2, todoDescription2, dueDate2);
+        expect(await todoList.checkTodoLength()).to.equal(2);
+        await expect(todoList.deleteTodo(10)).to.be.revertedWith("Invalid input")
+    });
 
+
+    it("test that todos can be updated", async ()=> {
+        const [id,updatedTitle, updateDescription, upDatedDueDate] = [1, "my new updated todo", "my gist for life update", 12334];
+
+        const {todoList,todoTitle, todoDescription, dueDate} = await loadFixture(deployTodoList);
+        const { todoTitle: todoTitle2, todoDescription: todoDescription2, dueDate: dueDate2 } = await loadFixture(deployTodoList);
+        await todoList.createTodos(todoTitle, todoDescription, dueDate);
+        await todoList.createTodos(todoTitle2, todoDescription2, dueDate2);
+        expect(await todoList.checkTodoLength()).to.equal(2);
+        expect(await todoList.updateTodos(id,updatedTitle,updateDescription,upDatedDueDate))
+        .to.emit( updatedTitle, updateDescription);
+        
+    });
+
+    it("test that todos can be updated", async ()=> {
+        const [id,updatedTitle, updateDescription, upDatedDueDate] = [1, "my new updated todo", "my gist for life update", 12334];
+
+        const {todoList,todoTitle, todoDescription, dueDate} = await loadFixture(deployTodoList);
+        const { todoTitle: todoTitle2, todoDescription: todoDescription2, dueDate: dueDate2 } = await loadFixture(deployTodoList);
+        await todoList.createTodos(todoTitle, todoDescription, dueDate);
+        await todoList.createTodos(todoTitle2, todoDescription2, dueDate2);
+        expect(await todoList.checkTodoLength()).to.equal(2);
+        expect(await todoList.updateTodos(id,updatedTitle,updateDescription,upDatedDueDate))
+        .to.emit( updatedTitle, updateDescription);
+        
+    });
+
+    
 });
     
 
